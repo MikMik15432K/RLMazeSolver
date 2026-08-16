@@ -30,7 +30,7 @@ class QLearningAgent:
         self.decay_rate = decay_rate
 
         self.q_table = np.zeros((num_states, num_actions))
-
+    #choosing an action randomly or by evaluation 
     def choose_action(self, state, train=True):
         if train and random.uniform(0, 1) < self.epsilon:
             return random.randint(0, self.num_actions - 1)
@@ -39,7 +39,7 @@ class QLearningAgent:
             max_val = np.max(q_values)
             max_actions = np.where(q_values == max_val)[0]
             return random.choice(max_actions)
-
+    #checking if it has reached the goal else updating
     def update(self, state, action, reward, next_state, done):
         if done:
             td_target = reward
@@ -48,12 +48,12 @@ class QLearningAgent:
             
         td_error = td_target - self.q_table[state, action]
         self.q_table[state, action] += self.alpha * td_error
-
+    
     def decay_hyperparameters(self):
         self.epsilon = max(self.min_epsilon, self.epsilon * self.decay_rate)
         self.alpha = max(self.min_alpha, self.alpha * self.alpha_decay)
 
-
+#decay rate for a and e
 def get_training_hyperparameters(grid_size):
     episodes = int(65 * grid_size)
     target_decay_step = int(episodes * 0.8)
@@ -83,7 +83,7 @@ def train():
     max_steps_per_episode = env.width * env.height * 2
     rewards_history = []
 
-    print(f"Training Q-Learning Agent on {env.height}x{env.width} Maze ({num_states} states) for {episodes} episodes...")
+    print(f"training Q-Learning agent on {env.height}x{env.width} Maze ({num_states} states) for {episodes} episodes...")
 
     for episode in range(episodes):
         state = env.reset()
