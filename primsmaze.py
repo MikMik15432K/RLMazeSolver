@@ -33,7 +33,7 @@ class MazeEnv:
     def state_to_pos(self, state_id):
         return state_id // self.width, state_id % self.width
 
-    #maze generation with primms algorithm
+    #maze generation with primms algorithm starting from the center
     def _generate_maze(self):
         maze = [[1 for _ in range(self.width)] for _ in range(self.height)]
         
@@ -67,7 +67,7 @@ class MazeEnv:
                 maze[self.start_pos[0] + 1][self.start_pos[1]] = 0
 
         return np.array(maze)
-
+    #finding the furthest point from the start wit BFS
     def _find_furthest_goal(self):
         queue = deque([(self.start_pos[0], self.start_pos[1], 0)])
         visited = {self.start_pos}
@@ -93,7 +93,7 @@ class MazeEnv:
 
     #interface for rl 
     def reset(self, regenerate_maze=False):
-        """Resets agent position to start. Optionally generates a new maze."""
+        
         if regenerate_maze:
             self.maze = self._generate_maze()
             self.goal_pos = self._find_furthest_goal()
@@ -101,7 +101,7 @@ class MazeEnv:
         return self.pos_to_state(*self.start_pos)
 
     def step(self, action):
-        """Actions: 0=Up, 1=Down, 2=Left, 3=Right"""
+       
         moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         dr, dc = moves[action]
         r, c = self.current_pos
@@ -155,7 +155,7 @@ class MazeEnv:
         trace_y = []
 
         def update(frame_state_id):
-            # Fixed method call: state_to_pos instead of _get_pos_from_id
+            
             row, col = self.state_to_pos(frame_state_id)
             agent_dot.center = (col, row)
             
